@@ -39,12 +39,12 @@ router.post("/appointments", async (req, res) => {
 
 A new appointment has been scheduled. Here are the details:
 
---------------------------------------------
+
 👤 Name           : ${name}
 📝 Help Needed    : ${help}
 📅 Appointment Date : ${formattedDate}
 📞 Contact Number : ${contact}
---------------------------------------------
+
 
 Please follow up with the client as needed.
 
