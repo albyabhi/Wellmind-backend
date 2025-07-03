@@ -7,11 +7,10 @@ require("dotenv").config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,  // ✅ Use environment variables
+    user: process.env.EMAIL_USER, // ✅ Use environment variables
     pass: process.env.EMAIL_PASS,
   },
 });
-
 
 // POST /api/appointments
 router.post("/appointments", async (req, res) => {
@@ -28,11 +27,30 @@ router.post("/appointments", async (req, res) => {
     await newAppointment.save();
 
     // Send Email
+    // Convert date from yyyy-mm-dd to dd-mm-yyyy
+    const formattedDate = date.split("-").reverse().join("-");
+
     const mailOptions = {
       from: "wellmind.ai.care@gmail.com",
       to: "alby4645@gmail.com",
-      subject: "New Appointment Added",
-      text: `A new appointment has been scheduled.\n\nName: ${name}\nContact: ${contact}\nHelp: ${help}\nDate: ${date}`,
+      subject: "📅 New Appointment Scheduled",
+
+      text: `
+
+A new appointment has been scheduled. Here are the details:
+
+--------------------------------------------
+👤 Name           : ${name}
+📝 Help Needed    : ${help}
+📅 Appointment Date : ${formattedDate}
+📞 Contact Number : ${contact}
+--------------------------------------------
+
+Please follow up with the client as needed.
+
+Best regards,  
+WellMind Appointment System
+`.trim(),
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
@@ -56,7 +74,7 @@ router.get("/fetch", async (req, res) => {
   try {
     const appointments = await Appointment.find().sort({ date: 1 });
     console.log(`✅ Retrieved ${appointments.length} appointments from DB`);
-    
+
     res.json(appointments);
   } catch (error) {
     console.error("❌ Fetch Error:", error);
@@ -80,7 +98,5 @@ router.patch("/appointments/:id/status", async (req, res) => {
     res.status(500).json({ message: "Failed to update status" });
   }
 });
-
-
 
 module.exports = router;
