@@ -32,7 +32,7 @@ router.post("/appointments", async (req, res) => {
 
     const mailOptions = {
       from: "wellmind.ai.care@gmail.com",
-      to: "alby4645@gmail.com",
+      to: "shahinarasheed50@gmail.com",
       subject: "📅 New Appointment Scheduled",
 
       text: `
